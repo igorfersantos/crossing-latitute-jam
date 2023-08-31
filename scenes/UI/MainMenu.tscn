@@ -1,0 +1,127 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://scenes/UI/MenuBackground.tscn" type="PackedScene" id=1]
+[ext_resource path="res://assets/ui/title.png" type="Texture" id=2]
+[ext_resource path="res://scenes/UI/AnimatedButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://resources/theme.tres" type="Theme" id=4]
+[ext_resource path="res://scenes/UI/MainMenu.gd" type="Script" id=7]
+
+[sub_resource type="Animation" id=1]
+resource_name = "bounce"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("MarginContainer/vBoxContainer/MarginContainer/PanelContainer:rect_scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.3, 0.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1.1, 1.1 ), Vector2( 0.9, 0.9 ), Vector2( 1, 1 ) ]
+}
+
+[node name="MainMenu" type="CanvasLayer"]
+script = ExtResource( 7 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "bounce"
+anims/bounce = SubResource( 1 )
+
+[node name="MenuBackground" parent="." instance=ExtResource( 1 )]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 18.0
+margin_top = 18.0
+margin_right = -12.0
+margin_bottom = -18.0
+
+[node name="vBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_right = 450.0
+margin_bottom = 234.0
+custom_constants/separation = 24
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/vBoxContainer"]
+margin_left = 132.0
+margin_top = 50.0
+margin_right = 318.0
+margin_bottom = 85.0
+size_flags_horizontal = 4
+texture = ExtResource( 2 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/vBoxContainer"]
+margin_top = 109.0
+margin_right = 450.0
+margin_bottom = 151.0
+theme = ExtResource( 4 )
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/vBoxContainer/MarginContainer"]
+margin_left = 57.0
+margin_right = 393.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 64, 48 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/vBoxContainer/MarginContainer/PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 335.0
+margin_bottom = 41.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/vBoxContainer/MarginContainer/PanelContainer/MarginContainer"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 326.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 112, 0 )
+custom_constants/separation = 0
+
+[node name="PlayButton" parent="MarginContainer/vBoxContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource( 3 )]
+text = "PLAY"
+
+[node name="OptionsButton" parent="MarginContainer/vBoxContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource( 3 )]
+margin_left = 106.0
+margin_right = 212.0
+text = "OPTIONS"
+
+[node name="QuitButton" parent="MarginContainer/vBoxContainer/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" instance=ExtResource( 3 )]
+margin_left = 212.0
+margin_right = 318.0
+text = "QUIT"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/vBoxContainer"]
+margin_top = 175.0
+margin_right = 450.0
+margin_bottom = 184.0
+custom_constants/separation = 16
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/vBoxContainer/HBoxContainer"]
+margin_left = 114.0
+margin_right = 201.0
+margin_bottom = 9.0
+theme = ExtResource( 4 )
+text = "Movement: W A S D"
+
+[node name="Label2" type="Label" parent="MarginContainer/vBoxContainer/HBoxContainer"]
+margin_left = 217.0
+margin_right = 271.0
+margin_bottom = 9.0
+theme = ExtResource( 4 )
+text = "Jump: SPACE"
+
+[node name="Label3" type="Label" parent="MarginContainer/vBoxContainer/HBoxContainer"]
+margin_left = 287.0
+margin_right = 335.0
+margin_bottom = 9.0
+theme = ExtResource( 4 )
+text = "Dash: SHIFT"

@@ -1,0 +1,380 @@
+[gd_scene load_steps=42 format=2]
+
+[ext_resource path="res://scenes/Characters/Player.gd" type="Script" id=2]
+[ext_resource path="res://assets/player/player_walk_1.png" type="Texture" id=3]
+[ext_resource path="res://assets/sounds/footstep_grass_003.ogg" type="AudioStream" id=4]
+[ext_resource path="res://assets/sounds/footstep_grass_004.ogg" type="AudioStream" id=5]
+[ext_resource path="res://assets/sounds/footstep_grass_002.ogg" type="AudioStream" id=6]
+[ext_resource path="res://scenes/Util/RandomAudioStreamPlayer.tscn" type="PackedScene" id=7]
+[ext_resource path="res://assets/sounds/footstep_grass_000.ogg" type="AudioStream" id=8]
+[ext_resource path="res://assets/sounds/footstep_grass_001.ogg" type="AudioStream" id=9]
+[ext_resource path="res://assets/sounds/footstep_concrete_000.ogg" type="AudioStream" id=10]
+[ext_resource path="res://assets/sounds/footstep_concrete_001.ogg" type="AudioStream" id=11]
+[ext_resource path="res://assets/sounds/footstep_concrete_002.ogg" type="AudioStream" id=12]
+[ext_resource path="res://assets/sounds/footstep_concrete_003.ogg" type="AudioStream" id=13]
+[ext_resource path="res://assets/sounds/footstep_concrete_004.ogg" type="AudioStream" id=14]
+[ext_resource path="res://assets/sounds/impactBell_heavy_004.ogg" type="AudioStream" id=15]
+[ext_resource path="res://assets/player/player_idle_1.png" type="Texture" id=16]
+[ext_resource path="res://assets/bg/focus_1920.png" type="Texture" id=17]
+[ext_resource path="res://assets/player/player_jump.png" type="Texture" id=18]
+[ext_resource path="res://assets/player/player_walk_2.png" type="Texture" id=19]
+[ext_resource path="res://assets/player/fire_trail_2.png" type="Texture" id=20]
+[ext_resource path="res://assets/player/fire_trail_1.png" type="Texture" id=21]
+[ext_resource path="res://assets/player/fire_trail.png" type="Texture" id=22]
+[ext_resource path="res://scenes/Characters/PlayerStats.tres" type="Resource" id=23]
+
+[sub_resource type="Shader" id=7]
+code = "shader_type canvas_item;
+
+uniform vec4 baseColor : hint_color;
+
+void fragment() {
+    vec4 texColor = texture(TEXTURE, UV);
+    COLOR.rgba = vec4(baseColor.r, baseColor.g, baseColor.b, texColor.a);
+    //COLOR.rgb = vec3(0.0, 0.0, 0.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
+shader_param/baseColor = Color( 0.705882, 0.360784, 0.52549, 1 )
+
+[sub_resource type="Curve" id=14]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=15]
+curve = SubResource( 14 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+trail_divisor = 20
+emission_shape = 5
+emission_ring_radius = 0.5
+emission_ring_inner_radius = 0.1
+emission_ring_height = 1.0
+emission_ring_axis = Vector3( 0, 0, 1 )
+flag_rotate_y = true
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 180.0
+gravity = Vector3( 0, -500, 0 )
+initial_velocity = 2.0
+initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping_random = 0.21
+angle = -6.0
+angle_random = 1.0
+scale_curve = SubResource( 15 )
+
+[sub_resource type="Gradient" id=11]
+offsets = PoolRealArray( 0.874477, 1 )
+colors = PoolColorArray( 0.705882, 0.360784, 0.52549, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=12]
+gradient = SubResource( 11 )
+
+[sub_resource type="Curve" id=9]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.26738, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=10]
+curve = SubResource( 9 )
+
+[sub_resource type="ParticlesMaterial" id=13]
+emission_shape = 5
+emission_ring_radius = 10.0
+emission_ring_inner_radius = 3.0
+emission_ring_height = 1.0
+emission_ring_axis = Vector3( 0, 0, 1 )
+flag_disable_z = true
+spread = 20.0
+gravity = Vector3( 20, -100, 0 )
+initial_velocity = 6.0
+initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping_random = 0.21
+angle = -6.0
+scale = 0.15
+scale_curve = SubResource( 10 )
+color_ramp = SubResource( 12 )
+
+[sub_resource type="Curve" id=16]
+_data = [ Vector2( 0, 1 ), 0.0, -0.190546, 0, 0, Vector2( 0.78626, 0 ), 0.0588103, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=17]
+curve = SubResource( 16 )
+
+[sub_resource type="ParticlesMaterial" id=18]
+trail_divisor = 20
+emission_shape = 5
+emission_ring_radius = 0.5
+emission_ring_inner_radius = 0.1
+emission_ring_height = 1.0
+emission_ring_axis = Vector3( 0, 0, 1 )
+flag_rotate_y = true
+flag_disable_z = true
+direction = Vector3( 0, -1, 0 )
+spread = 180.0
+gravity = Vector3( 0, -500, 0 )
+initial_velocity = 2.0
+initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping_random = 0.21
+angle = -6.0
+angle_random = 1.0
+scale = 0.6
+scale_curve = SubResource( 17 )
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 16 ) ],
+"loop": true,
+"name": "idle",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 18 ) ],
+"loop": true,
+"name": "jump",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 19 ) ],
+"loop": true,
+"name": "run",
+"speed": 6.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 5, 7.5 )
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 7.0
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 5, 9 )
+
+[sub_resource type="CapsuleShape2D" id=5]
+radius = 11.0
+height = 10.0
+
+[sub_resource type="Animation" id=19]
+resource_name = "spawn"
+length = 60.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("HitboxArea/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Visuals/Position2D/Focus:rect_scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 60 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1.5, 1.5 ), Vector2( 0.6, 0.6 ) ]
+}
+
+[node name="Player" type="KinematicBody2D" groups=["player"]]
+collision_layer = 4
+script = ExtResource( 2 )
+dashHazardMask = 4194304
+focus_max_time = null
+focus_image_max_scale = null
+focus_image_min_scale = null
+player_stats = ExtResource( 23 )
+
+[node name="FootstepAudioPlayer" parent="." instance=ExtResource( 7 )]
+position = Vector2( 0, -8 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 8 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 9 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 6 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 4 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer5" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 5 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer6" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 10 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer7" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 11 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer8" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 12 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer9" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 13 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="AudioStreamPlayer10" type="AudioStreamPlayer2D" parent="FootstepAudioPlayer"]
+stream = ExtResource( 14 )
+volume_db = 4.0
+bus = "Footsteps"
+
+[node name="DashAudioPlayer" parent="." instance=ExtResource( 7 )]
+position = Vector2( 0, -8 )
+numberToPlay = 1
+enablePitchRandomization = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer2D" parent="DashAudioPlayer"]
+stream = ExtResource( 15 )
+volume_db = -5.0
+bus = "PlayerDash"
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer2D" parent="DashAudioPlayer"]
+stream = ExtResource( 15 )
+volume_db = -5.0
+bus = "PlayerDash"
+
+[node name="Visuals" type="Node2D" parent="."]
+
+[node name="DashParticles" type="Particles2D" parent="Visuals"]
+visible = false
+show_behind_parent = true
+material = SubResource( 8 )
+position = Vector2( 0, -14 )
+amount = 15
+lifetime = 0.4
+local_coords = false
+process_material = SubResource( 6 )
+texture = ExtResource( 16 )
+
+[node name="FlameParticles" type="Particles2D" parent="Visuals"]
+show_behind_parent = true
+position = Vector2( 0, -11 )
+amount = 2
+lifetime = 0.6
+fract_delta = false
+visibility_rect = Rect2( -1, -1, 1, 1 )
+local_coords = false
+process_material = SubResource( 13 )
+texture = ExtResource( 22 )
+
+[node name="Flame2" type="Particles2D" parent="Visuals"]
+show_behind_parent = true
+position = Vector2( 0, -11 )
+amount = 20
+lifetime = 0.12
+visibility_rect = Rect2( -1, -1, 1, 1 )
+local_coords = false
+process_material = SubResource( 6 )
+texture = ExtResource( 21 )
+
+[node name="Flame" type="Particles2D" parent="Visuals"]
+show_behind_parent = true
+position = Vector2( -1, -10 )
+amount = 40
+lifetime = 0.08
+visibility_rect = Rect2( -1, -1, 1, 1 )
+local_coords = false
+process_material = SubResource( 18 )
+texture = ExtResource( 20 )
+
+[node name="Position2D" type="Position2D" parent="Visuals"]
+position = Vector2( 0, -9 )
+
+[node name="Focus" type="TextureRect" parent="Visuals/Position2D"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -960.0
+margin_top = -540.0
+margin_right = 960.0
+margin_bottom = 540.0
+rect_rotation = 360.0
+rect_scale = Vector2( 2.05933, 2.05933 )
+rect_pivot_offset = Vector2( 960, 540 )
+texture = ExtResource( 17 )
+
+[node name="Listener2D" type="Listener2D" parent="Visuals/Position2D"]
+position = Vector2( 0, 9 )
+current = true
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true
+
+[node name="FocusTimer" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 0, -9 )
+frames = SubResource( 2 )
+animation = "idle"
+offset = Vector2( 0, -3 )
+
+[node name="BodyCollision" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( 0, -7.5 )
+shape = SubResource( 1 )
+
+[node name="PickupArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 8388608
+collision_mask = 8388608
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea"]
+position = Vector2( 0, -8 )
+shape = SubResource( 3 )
+
+[node name="HitboxArea" type="Area2D" parent="."]
+position = Vector2( 0, -9 )
+collision_layer = 4
+collision_mask = 5242880
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxArea"]
+position = Vector2( 0, 1 )
+shape = SubResource( 4 )
+
+[node name="DashArea" type="Area2D" parent="."]
+visible = false
+position = Vector2( -1, -8 )
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DashArea"]
+rotation = -1.57079
+shape = SubResource( 5 )
+disabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "spawn"
+anims/spawn = SubResource( 19 )

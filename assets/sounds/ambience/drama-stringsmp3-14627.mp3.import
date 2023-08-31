@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/drama-stringsmp3-14627.mp3-f0b303aedcc6ec89e23397d3e685c998.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/ambience/drama-stringsmp3-14627.mp3"
+dest_files=[ "res://.import/drama-stringsmp3-14627.mp3-f0b303aedcc6ec89e23397d3e685c998.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

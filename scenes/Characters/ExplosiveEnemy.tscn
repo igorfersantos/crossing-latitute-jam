@@ -1,0 +1,177 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://scenes/Characters/ExplosiveEnemy.gd" type="Script" id=1]
+[ext_resource path="res://assets/enemy/bomb_walk5.png" type="Texture" id=2]
+[ext_resource path="res://assets/sounds/sfx/enemy_spawn.ogg" type="AudioStream" id=3]
+[ext_resource path="res://assets/enemy/bomb_walk3.png" type="Texture" id=6]
+[ext_resource path="res://scenes/Characters/ExplosiveEnemyStats.tres" type="Resource" id=7]
+[ext_resource path="res://assets/enemy/bomb_walk1.png" type="Texture" id=9]
+[ext_resource path="res://assets/enemy/bomb_walk4.png" type="Texture" id=10]
+[ext_resource path="res://assets/enemy/bomb_walk6.png" type="Texture" id=11]
+[ext_resource path="res://assets/enemy/bomb_walk2.png" type="Texture" id=12]
+
+[sub_resource type="Animation" id=7]
+tracks/0/type = "value"
+tracks/0/path = NodePath("HazardArea/CollisionShape2D:disabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HitboxArea/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 0.75
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Visuals:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.35, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 1.2, 1.2 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HazardArea/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HitboxArea/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:is_spawning")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.75 ),
+"transitions": PoolRealArray( 2.56621e-05, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 9 ), ExtResource( 12 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 2 ), ExtResource( 11 ) ],
+"loop": true,
+"name": "run",
+"speed": 6.0
+}, {
+"frames": [ null, null, null ],
+"loop": true,
+"name": "spawn",
+"speed": 4.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 5, 5 )
+
+[sub_resource type="RectangleShape2D" id=9]
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 7.0
+
+[sub_resource type="CircleShape2D" id=5]
+
+[node name="ExplosiveEnemy" type="KinematicBody2D" groups=["enemy"]]
+collision_layer = 0
+collision_mask = 5
+collision/safe_margin = 0.01
+script = ExtResource( 1 )
+stats = ExtResource( 7 )
+is_spawning = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "spawn"
+anims/default = SubResource( 7 )
+anims/spawn = SubResource( 6 )
+next/spawn = "default"
+
+[node name="Sound" type="AudioStreamPlayer2D" parent="."]
+position = Vector2( 0, -9 )
+stream = ExtResource( 3 )
+volume_db = 5.0
+autoplay = true
+max_distance = 230.0
+attenuation = 2.0
+bus = "SFX"
+
+[node name="Visuals" type="Node2D" parent="."]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Visuals"]
+frames = SubResource( 1 )
+animation = "run"
+frame = 1
+playing = true
+offset = Vector2( 0, -3 )
+
+[node name="Center" type="Position2D" parent="Visuals/AnimatedSprite"]
+
+[node name="BodyCollision" type="CollisionShape2D" parent="."]
+shape = SubResource( 10 )
+
+[node name="GoalDetector" type="Area2D" parent="."]
+visible = false
+collision_layer = 2097152
+collision_mask = 2097152
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalDetector"]
+shape = SubResource( 9 )
+
+[node name="HazardArea" type="Area2D" parent="."]
+collision_layer = 1050624
+collision_mask = 4194304
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HazardArea"]
+shape = SubResource( 4 )
+
+[node name="HitboxArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxArea"]
+shape = SubResource( 5 )
+
+[node name="ExplosionTimer" type="Timer" parent="."]
+wait_time = 20.0
+one_shot = true
+autostart = true

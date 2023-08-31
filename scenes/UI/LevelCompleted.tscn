@@ -1,0 +1,122 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://resources/theme.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/UI/LevelCompleted.gd" type="Script" id=2]
+[ext_resource path="res://scenes/UI/AnimatedButton.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/UI/CoinCounter.tscn" type="PackedScene" id=4]
+
+[sub_resource type="Animation" id=1]
+resource_name = "bounce"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/path = NodePath("MarginContainer/PanelContainer:rect_scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.7, 0.8, 0.9 ),
+"transitions": PoolRealArray( 1e-05, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( 1.1, 1.1 ), Vector2( 0.9, 0.9 ), Vector2( 1, 1 ) ]
+}
+
+[node name="LevelCompleted" type="CanvasLayer"]
+script = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "bounce"
+anims/bounce = SubResource( 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer"]
+margin_left = 175.0
+margin_top = 83.0
+margin_right = 305.0
+margin_bottom = 187.0
+rect_pivot_offset = Vector2( 64, 55 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource( 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/PanelContainer"]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 129.0
+margin_bottom = 103.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 120.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 112, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+margin_right = 112.0
+margin_bottom = 9.0
+align = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 13.0
+margin_right = 112.0
+margin_bottom = 22.0
+custom_constants/separation = 10
+
+[node name="CoinsCollected2" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+margin_right = 112.0
+margin_bottom = 9.0
+text = "Level Completed"
+align = 1
+
+[node name="CoinCounter" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource( 4 )]
+visible = false
+anchor_right = 0.0
+margin_left = 36.0
+margin_top = 19.0
+margin_right = 76.0
+margin_bottom = 37.0
+size_flags_horizontal = 4
+
+[node name="CoinsCollected" type="Label" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer"]
+visible = false
+margin_top = 30.0
+margin_right = 112.0
+margin_bottom = 39.0
+text = "INTO THE DEEP"
+align = 1
+
+[node name="Space" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 26.0
+margin_right = 112.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 0, 8 )
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
+margin_top = 38.0
+margin_right = 112.0
+margin_bottom = 86.0
+custom_constants/separation = 0
+
+[node name="NextLevelButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 3.0
+margin_right = 109.0
+text = "NEXT LEVEL"
+
+[node name="QuitToMenuButton" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer2" instance=ExtResource( 3 )]
+margin_left = 3.0
+margin_top = 24.0
+margin_right = 109.0
+margin_bottom = 48.0
+text = "QUIT TO MENU"

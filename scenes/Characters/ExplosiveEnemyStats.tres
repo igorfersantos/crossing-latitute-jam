@@ -1,0 +1,33 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Resource
+
+enum Direction { RIGHT, LEFT }
+
+export(Direction) var start_direction
+
+export var minSpeed = 10
+export var maxSpeed = 100
+export var speed = 85
+export var gravity = 500
+
+export var bomb_strength:int = 2
+export var bomb_radius:int = 18
+export var bomb_raycasts:int = 200
+export(int, LAYERS_2D_PHYSICS) var bomb_mask
+export var countdown_time = 2
+"
+
+[resource]
+script = SubResource( 1 )
+start_direction = 0
+minSpeed = 25
+maxSpeed = 100
+speed = 10
+gravity = 500
+bomb_strength = 2
+bomb_radius = 30
+bomb_raycasts = 200
+bomb_mask = 7
+countdown_time = 6
