@@ -15,5 +15,5 @@ script = SubResource( 1 )
 gravity = 800
 max_horizontal_speed = 80
 horizontal_acceleration = 750
-jump_force = 200
+jump_force = 300
 jump_fall_gravity_multiplier = 1.2
