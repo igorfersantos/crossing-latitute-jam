@@ -1,5 +1,6 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=43 format=2]
 
+[ext_resource path="res://scenes/Characters/PlayerStats.tres" type="Resource" id=1]
 [ext_resource path="res://scenes/Characters/Player.gd" type="Script" id=2]
 [ext_resource path="res://assets/player/player_walk_1.png" type="Texture" id=3]
 [ext_resource path="res://assets/sounds/footstep_grass_003.ogg" type="AudioStream" id=4]
@@ -21,7 +22,9 @@
 [ext_resource path="res://assets/player/fire_trail_2.png" type="Texture" id=20]
 [ext_resource path="res://assets/player/fire_trail_1.png" type="Texture" id=21]
 [ext_resource path="res://assets/player/fire_trail.png" type="Texture" id=22]
-[ext_resource path="res://scenes/Characters/PlayerStats.tres" type="Resource" id=23]
+
+[sub_resource type="PhysicsMaterial" id=20]
+friction = 0.45
 
 [sub_resource type="Shader" id=7]
 code = "shader_type canvas_item;
@@ -143,8 +146,9 @@ animations = [ {
 "speed": 6.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 5, 7.5 )
+[sub_resource type="CapsuleShape2D" id=21]
+radius = 5.0
+height = 5.0
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 7.0
@@ -184,14 +188,15 @@ tracks/1/keys = {
 "values": [ Vector2( 1.5, 1.5 ), Vector2( 0.6, 0.6 ) ]
 }
 
-[node name="Player" type="KinematicBody2D" groups=["player"]]
-collision_layer = 4
+[node name="Player" type="RigidBody2D" groups=["player"]]
+collision_layer = 5
+mode = 2
+physics_material_override = SubResource( 20 )
+gravity_scale = 4.0
+contacts_reported = 1
+contact_monitor = true
 script = ExtResource( 2 )
-dashHazardMask = 4194304
-focus_max_time = null
-focus_image_max_scale = null
-focus_image_min_scale = null
-player_stats = ExtResource( 23 )
+player_stats = ExtResource( 1 )
 
 [node name="FootstepAudioPlayer" parent="." instance=ExtResource( 7 )]
 position = Vector2( 0, -8 )
@@ -327,12 +332,8 @@ texture = ExtResource( 17 )
 position = Vector2( 0, 9 )
 current = true
 
-[node name="CoyoteTimer" type="Timer" parent="."]
+[node name="JustAiredTimer" type="Timer" parent="."]
 wait_time = 0.15
-one_shot = true
-
-[node name="FocusTimer" type="Timer" parent="."]
-wait_time = 60.0
 one_shot = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
@@ -342,9 +343,8 @@ animation = "idle"
 offset = Vector2( 0, -3 )
 
 [node name="BodyCollision" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2( 0, -7.5 )
-shape = SubResource( 1 )
+position = Vector2( 0, -8 )
+shape = SubResource( 21 )
 
 [node name="PickupArea" type="Area2D" parent="."]
 visible = false
@@ -356,6 +356,7 @@ position = Vector2( 0, -8 )
 shape = SubResource( 3 )
 
 [node name="HitboxArea" type="Area2D" parent="."]
+visible = false
 position = Vector2( 0, -9 )
 collision_layer = 4
 collision_mask = 5242880

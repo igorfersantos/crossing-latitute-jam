@@ -33,6 +33,9 @@ func spawn_enemy():
 	emit_signal("enemy_spawned", current_enemy_node)
 
 func check_enemy_spawn():
+	if !enabled:
+		return
+		
 	if is_instance_valid(current_enemy_node): 
 		return
 		
