@@ -52,6 +52,7 @@ func _integrate_forces(state):
 
 	is_state_new = false
 
+
 func get_is_on_ground(state):
 	var contact_count = state.get_contact_count()
 	if contact_count > 0 and contact_count < 2:
@@ -63,6 +64,7 @@ func get_is_on_ground(state):
 
 	print(ground_contacts)
 	return true in ground_contacts
+
 
 func is_collider_below_me(collider):
 	return int(collider.y) >= int(global_position.y)
@@ -76,6 +78,7 @@ func change_state(new_state):
 	current_state = new_state
 	is_state_new = true
 
+
 func process_idle(state, is_on_ground):
 	if (is_state_new):
 		$Visuals/DashParticles.emitting = false
@@ -85,9 +88,9 @@ func process_idle(state, is_on_ground):
 	if move_vec.x:
 		change_state(State.RUN)
 	elif is_on_ground and Input.is_action_just_pressed("jump"):
-		var direction = Vector2(move_vec.x * -1, -1).normalized()
-		apply_central_impulse(direction * player_stats.jump_force)
+		jump()
 		change_state(State.AIR)
+
 
 func process_running(state, is_on_ground):
 	if (is_state_new):
@@ -99,14 +102,14 @@ func process_running(state, is_on_ground):
 	elif state.get_contact_count() == 0:
 		change_state(State.AIR)
 	elif is_on_ground and Input.is_action_just_pressed("jump"):
-		var direction = Vector2(move_vec.x * -1, -1).normalized()
-		apply_central_impulse(direction * player_stats.jump_force)
+		jump()
 		change_state(State.AIR)
 	else:
 		state.linear_velocity.x = move_vec.x * player_stats.max_horizontal_speed # * get_physics_process_delta_time()
-	#applied_force = Vector2(move_vec.x * player_stats.max_horizontal_speed * state.get_step(), state.linear_velocity.y)
+		#applied_force = Vector2(move_vec.x * player_stats.max_horizontal_speed * state.get_step(), state.linear_velocity.y)
 
 	update_animation()
+
 
 func process_air(state, is_on_ground):
 	if (is_state_new):
@@ -156,6 +159,14 @@ func update_animation():
 	if (move_vec.x != 0):
 		$AnimatedSprite.flip_h = move_vec.x > 0
 
+func jump():
+	var angle = 45
+	var direction = Vector2(move_vec.x * -1, -1).normalized()
+	var impulse = Vector2(direction.x * player_stats.horizontal_jump_force, direction.y * player_stats.vertical_jump_force)
+	#player_stats.vertical_jump_force
+
+	print(impulse)
+	apply_central_impulse(impulse) #maybe add a * jump_force here
 
 func kill():
 	if (is_dying):

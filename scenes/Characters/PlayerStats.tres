@@ -3,17 +3,13 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Resource
 
-export var gravity = 700
 export var max_horizontal_speed = 140
-export var horizontal_acceleration = 750
-export var jump_force = 250
-export var jump_fall_gravity_multiplier: float = 1.2
+export var horizontal_jump_force = 250
+export var vertical_jump_force = 50
 "
 
 [resource]
 script = SubResource( 1 )
-gravity = 800
 max_horizontal_speed = 80
-horizontal_acceleration = 750
-jump_force = 300
-jump_fall_gravity_multiplier = 1.2
+horizontal_jump_force = 200
+vertical_jump_force = 300
