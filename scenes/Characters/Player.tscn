@@ -1,8 +1,8 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=75 format=2]
 
 [ext_resource path="res://scenes/Characters/PlayerStats.tres" type="Resource" id=1]
 [ext_resource path="res://scenes/Characters/Player.gd" type="Script" id=2]
-[ext_resource path="res://assets/player/player_walk_1.png" type="Texture" id=3]
+[ext_resource path="res://assets/player2/andar0000.png" type="Texture" id=3]
 [ext_resource path="res://assets/sounds/footstep_grass_003.ogg" type="AudioStream" id=4]
 [ext_resource path="res://assets/sounds/footstep_grass_004.ogg" type="AudioStream" id=5]
 [ext_resource path="res://assets/sounds/footstep_grass_002.ogg" type="AudioStream" id=6]
@@ -17,11 +17,42 @@
 [ext_resource path="res://assets/sounds/impactBell_heavy_004.ogg" type="AudioStream" id=15]
 [ext_resource path="res://assets/player/player_idle_1.png" type="Texture" id=16]
 [ext_resource path="res://assets/bg/focus_1920.png" type="Texture" id=17]
-[ext_resource path="res://assets/player/player_jump.png" type="Texture" id=18]
-[ext_resource path="res://assets/player/player_walk_2.png" type="Texture" id=19]
+[ext_resource path="res://assets/player2/jump.png" type="Texture" id=18]
+[ext_resource path="res://assets/player2/andar0005.png" type="Texture" id=19]
 [ext_resource path="res://assets/player/fire_trail_2.png" type="Texture" id=20]
 [ext_resource path="res://assets/player/fire_trail_1.png" type="Texture" id=21]
 [ext_resource path="res://assets/player/fire_trail.png" type="Texture" id=22]
+[ext_resource path="res://assets/player2/idle0000.png" type="Texture" id=23]
+[ext_resource path="res://assets/player2/idle0005.png" type="Texture" id=24]
+[ext_resource path="res://assets/player2/idle0002.png" type="Texture" id=25]
+[ext_resource path="res://assets/player2/idle0008.png" type="Texture" id=26]
+[ext_resource path="res://assets/player2/idle0011.png" type="Texture" id=27]
+[ext_resource path="res://assets/player2/idle0007.png" type="Texture" id=28]
+[ext_resource path="res://assets/player2/idle0004.png" type="Texture" id=29]
+[ext_resource path="res://assets/player2/idle0010.png" type="Texture" id=30]
+[ext_resource path="res://assets/player2/idle0009.png" type="Texture" id=31]
+[ext_resource path="res://assets/player2/idle0001.png" type="Texture" id=32]
+[ext_resource path="res://assets/player2/idle0006.png" type="Texture" id=33]
+[ext_resource path="res://assets/player2/idle0003.png" type="Texture" id=34]
+[ext_resource path="res://assets/player2/andar0009.png" type="Texture" id=35]
+[ext_resource path="res://assets/player2/andar0008.png" type="Texture" id=36]
+[ext_resource path="res://assets/player2/andar0003.png" type="Texture" id=37]
+[ext_resource path="res://assets/player2/andar0007.png" type="Texture" id=38]
+[ext_resource path="res://assets/player2/andar0004.png" type="Texture" id=39]
+[ext_resource path="res://assets/player2/andar0006.png" type="Texture" id=40]
+[ext_resource path="res://assets/player2/andar0002.png" type="Texture" id=41]
+[ext_resource path="res://assets/player2/andar0001.png" type="Texture" id=42]
+[ext_resource path="res://assets/player2/Knockback0003.png" type="Texture" id=43]
+[ext_resource path="res://assets/player2/Knockback0001.png" type="Texture" id=44]
+[ext_resource path="res://assets/player2/Knockback0002.png" type="Texture" id=45]
+[ext_resource path="res://assets/player2/Knockback0000.png" type="Texture" id=46]
+[ext_resource path="res://assets/player2/Knockback0004.png" type="Texture" id=47]
+[ext_resource path="res://assets/player2/damage0001.png" type="Texture" id=48]
+[ext_resource path="res://assets/player2/damage0004.png" type="Texture" id=49]
+[ext_resource path="res://assets/player2/damage0002.png" type="Texture" id=50]
+[ext_resource path="res://assets/player2/damage0005.png" type="Texture" id=51]
+[ext_resource path="res://assets/player2/damage0000.png" type="Texture" id=52]
+[ext_resource path="res://assets/player2/damage0003.png" type="Texture" id=53]
 
 [sub_resource type="PhysicsMaterial" id=20]
 friction = 0.45
@@ -130,25 +161,37 @@ scale_curve = SubResource( 17 )
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
-"frames": [ ExtResource( 16 ) ],
+"frames": [ ExtResource( 23 ), ExtResource( 32 ), ExtResource( 25 ), ExtResource( 34 ), ExtResource( 29 ), ExtResource( 24 ), ExtResource( 33 ), ExtResource( 28 ), ExtResource( 26 ), ExtResource( 31 ), ExtResource( 30 ), ExtResource( 27 ) ],
 "loop": true,
 "name": "idle",
-"speed": 3.0
+"speed": 12.0
 }, {
 "frames": [ ExtResource( 18 ) ],
 "loop": true,
 "name": "jump",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 3 ), ExtResource( 19 ) ],
+"frames": [ ExtResource( 46 ), ExtResource( 44 ), ExtResource( 45 ), ExtResource( 43 ), ExtResource( 47 ) ],
+"loop": false,
+"name": "knockback",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 52 ), ExtResource( 48 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 51 ) ],
+"loop": false,
+"name": "knockback_damage",
+"speed": 20.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 42 ), ExtResource( 41 ), ExtResource( 37 ), ExtResource( 39 ), ExtResource( 19 ), ExtResource( 40 ), ExtResource( 38 ), ExtResource( 36 ), ExtResource( 35 ) ],
 "loop": true,
 "name": "run",
 "speed": 6.0
 } ]
 
-[sub_resource type="CapsuleShape2D" id=21]
-radius = 5.0
-height = 6.0
+[sub_resource type="CapsuleShape2D" id=22]
+radius = 8.0
+
+[sub_resource type="RayShape2D" id=21]
+length = 4.0
 
 [sub_resource type="CircleShape2D" id=3]
 radius = 7.0
@@ -281,6 +324,7 @@ process_material = SubResource( 6 )
 texture = ExtResource( 16 )
 
 [node name="FlameParticles" type="Particles2D" parent="Visuals"]
+visible = false
 show_behind_parent = true
 position = Vector2( 0, -11 )
 amount = 2
@@ -292,6 +336,7 @@ process_material = SubResource( 13 )
 texture = ExtResource( 22 )
 
 [node name="Flame2" type="Particles2D" parent="Visuals"]
+visible = false
 show_behind_parent = true
 position = Vector2( 0, -11 )
 amount = 20
@@ -302,6 +347,7 @@ process_material = SubResource( 6 )
 texture = ExtResource( 21 )
 
 [node name="Flame" type="Particles2D" parent="Visuals"]
+visible = false
 show_behind_parent = true
 position = Vector2( -1, -10 )
 amount = 40
@@ -339,12 +385,25 @@ one_shot = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 position = Vector2( 0, -9 )
+scale = Vector2( 0.5, 0.5 )
 frames = SubResource( 2 )
-animation = "idle"
+animation = "knockback"
+frame = 4
 offset = Vector2( 0, -3 )
 
-[node name="BodyCollision" type="CollisionShape2D" parent="."]
-position = Vector2( 0, -8 )
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( 0.6, -11 )
+shape = SubResource( 22 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( -3, 5.4 )
+shape = SubResource( 21 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( 2, 5.4 )
 shape = SubResource( 21 )
 
 [node name="PickupArea" type="Area2D" parent="."]

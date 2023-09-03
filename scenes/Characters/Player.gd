@@ -2,7 +2,7 @@ extends RigidBody2D
 
 signal died
 
-enum State { IDLE, RUN, AIR, INPUT_DISABLED }
+enum State { IDLE, RUN, AIR, KNOCKBACK, INPUT_DISABLED }
 
 export(int, LAYERS_2D_PHYSICS) var iframe_mask
 export var player_stats: Resource
@@ -20,37 +20,58 @@ var is_state_new = true
 var is_dying = false
 
 var current_iframe_mask = 0
-
+var last_direction = Vector2.RIGHT
+var jump_pressed
+var knockback_pressed
 
 func _ready():
 	$HitboxArea.connect("area_entered", self, "on_hazard_area_entered")
-	$AnimatedSprite.connect("frame_changed", self, "on_animated_sprite_frame_changed")
+	$AnimatedSprite.connect("frame_changed", self, "on_animated_sprite_frame_changed", [],  CONNECT_REFERENCE_COUNTED)
+	$AnimatedSprite.connect("animation_finished", self, "on_animated_sprite_animation_finished", [$AnimatedSprite.animation], CONNECT_REFERENCE_COUNTED)
 	current_iframe_mask = $HitboxArea.collision_mask
 	
 
 func _integrate_forces(state):
 	var is_on_ground = get_is_on_ground(state)
 
-	#print(is_on_ground)
-	move_vec = get_movement_vector();
+	move_vec = get_movement_vector()
+	jump_pressed = Input.is_action_just_pressed("jump")
+	knockback_pressed = Input.is_action_just_pressed("jump_knockback")
 
 	match current_state:
 		State.IDLE:
-			print("idle...")
 			process_idle(state, is_on_ground)
 		State.RUN:
-			print("run...")
 			process_running(state, is_on_ground)
 		State.AIR:
-			print("air...")
 			process_air(state, is_on_ground)
-			pass
+		State.KNOCKBACK:
+			process_knockback(state, is_on_ground)
 		State.INPUT_DISABLED:
-			print("input disabled...")
 			#process_input_disabled(delta, is_on_ground)
 			pass
 
+	print(current_state, " ", $AnimatedSprite.animation, " ", $AnimatedSprite.frame)
 	is_state_new = false
+
+
+func update_animation():
+	match current_state:
+		State.IDLE:
+			$AnimatedSprite.play("idle")
+		State.RUN:
+			$AnimatedSprite.play("run")
+		State.AIR:
+			$AnimatedSprite.play("jump")
+		State.KNOCKBACK:
+			if $AnimatedSprite.animation == "knockback_damage":
+				return
+			$AnimatedSprite.play("knockback")
+		_:
+			$AnimatedSprite.play("idle")
+	
+	if (move_vec.x != 0):
+		$AnimatedSprite.flip_h = move_vec.x > 0
 
 
 func get_is_on_ground(state):
@@ -59,10 +80,13 @@ func get_is_on_ground(state):
 		return is_collider_below_me(state.get_contact_collider_position(0))
 	
 	var ground_contacts = []
+	var contact_result = false
 	for index in contact_count:
-		ground_contacts.append(is_collider_below_me(state.get_contact_collider_position(index)))
+		contact_result = is_collider_below_me(state.get_contact_collider_position(index))
+		if contact_result:
+			return true
+		ground_contacts.append(contact_result)
 
-	print(ground_contacts)
 	return true in ground_contacts
 
 
@@ -83,14 +107,17 @@ func process_idle(state, is_on_ground):
 	if (is_state_new):
 		$Visuals/DashParticles.emitting = false
 		$HitboxArea.collision_mask = current_iframe_mask
+		$AnimatedSprite.play("idle")
 		linear_velocity.x = 0
 	
 	if move_vec.x:
 		change_state(State.RUN)
-	elif is_on_ground and Input.is_action_just_pressed("jump"):
+	elif is_on_ground and jump_pressed:
 		jump()
 		change_state(State.AIR)
-
+	elif knockback_pressed:
+		jump_knockback()
+		change_state(State.KNOCKBACK)
 
 func process_running(state, is_on_ground):
 	if (is_state_new):
@@ -101,10 +128,14 @@ func process_running(state, is_on_ground):
 		change_state(State.IDLE)
 	elif state.get_contact_count() == 0:
 		change_state(State.AIR)
-	elif is_on_ground and Input.is_action_just_pressed("jump"):
+	elif is_on_ground and jump_pressed:
 		jump()
 		change_state(State.AIR)
+	elif knockback_pressed:
+		jump_knockback()
+		change_state(State.KNOCKBACK)
 	else:
+		last_direction = move_vec
 		state.linear_velocity.x = move_vec.x * player_stats.max_horizontal_speed # * get_physics_process_delta_time()
 		#applied_force = Vector2(move_vec.x * player_stats.max_horizontal_speed * state.get_step(), state.linear_velocity.y)
 
@@ -123,13 +154,26 @@ func process_air(state, is_on_ground):
 	
 	if is_on_ground and just_aired_timer.is_stopped():
 		change_state(State.IDLE)
-	# if move_vec.x:
-	# 	state.linear_velocity.x += move_vec.x * player_stats.maxHorizontalSpeed
-
-	# if (abs(velocity.x) < player_stats.minDashSpeed):
-	# 	call_deferred("change_state", State.NORMAL)
+	elif knockback_pressed:
+		jump_knockback()
+		change_state(State.KNOCKBACK)
 
 
+func process_knockback(state, is_on_ground):
+	if (is_state_new):
+		#disable_enemy_collision()
+		$DashAudioPlayer.play()
+		$Visuals/DashParticles.emitting = true
+		$"/root/Helpers".apply_camera_snake(.75)
+		#$AnimatedSprite.play("knockback")
+		var velocityMod = 1 if $AnimatedSprite.flip_h else -1
+	
+
+
+	if is_on_ground and not move_vec.x:
+		change_state(State.IDLE)
+	
+	update_animation()
 
 # func process_input_disabled(delta):
 # 	if (is_state_new):
@@ -142,31 +186,22 @@ func process_air(state, is_on_ground):
 func get_movement_vector():
 	var move_vector = Vector2.ZERO
 	move_vector.x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
-	move_vector.y = -1 if Input.is_action_just_pressed("jump") else 0
+	move_vector.y = -1 if Input.is_action_just_pressed("jump_knockback") else 0
 	return move_vector
 
 
-func update_animation():
-	var move_vec = get_movement_vector()
+func jump_knockback():
+	#var angle = 45
+	var direction = Vector2(last_direction.x * -1, -1).normalized()
+	var impulse = Vector2(direction.x * player_stats.horizontal_jump_force, direction.y * player_stats.vertical_jump_force)
+	apply_central_impulse(impulse)
 
-	# if (!is_on_floor()):
-	# 	$AnimatedSprite.play("jump")
-	if (move_vec.x != 0):
-		$AnimatedSprite.play("run")
-	else:
-		$AnimatedSprite.play("idle")
-	
-	if (move_vec.x != 0):
-		$AnimatedSprite.flip_h = move_vec.x > 0
 
 func jump():
-	var angle = 45
-	var direction = Vector2(move_vec.x * -1, -1).normalized()
+	var direction = Vector2.UP
 	var impulse = Vector2(direction.x * player_stats.horizontal_jump_force, direction.y * player_stats.vertical_jump_force)
-	#player_stats.vertical_jump_force
+	apply_central_impulse(impulse)
 
-	print(impulse)
-	apply_central_impulse(impulse) #maybe add a * jump_force here
 
 func kill():
 	if (is_dying):
@@ -200,3 +235,9 @@ func on_hazard_area_entered(_area2d):
 func on_animated_sprite_frame_changed():
 	if ($AnimatedSprite.animation == "run" && $AnimatedSprite.frame == 0):
 		spawn_footsteps()
+
+func on_animated_sprite_animation_finished(animation):
+	if animation == "knockback":
+		print("mudou pra damage")
+		$AnimatedSprite.play("knockback_damage")
+		print($AnimatedSprite.animation)

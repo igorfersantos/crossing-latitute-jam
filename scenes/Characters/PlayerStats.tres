@@ -10,6 +10,6 @@ export var vertical_jump_force = 50
 
 [resource]
 script = SubResource( 1 )
-max_horizontal_speed = 80
+max_horizontal_speed = 60
 horizontal_jump_force = 200
 vertical_jump_force = 300
