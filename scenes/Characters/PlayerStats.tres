@@ -6,6 +6,7 @@ script/source = "extends Resource
 export var max_horizontal_speed = 140
 export var horizontal_jump_force = 250
 export var vertical_jump_force = 50
+export var lifes = 10
 "
 
 [resource]
@@ -13,3 +14,4 @@ script = SubResource( 1 )
 max_horizontal_speed = 60
 horizontal_jump_force = 200
 vertical_jump_force = 300
+lifes = 8

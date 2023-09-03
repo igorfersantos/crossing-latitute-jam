@@ -10,4 +10,4 @@ func _ready():
 
 	if OS.has_feature("editor"):
 		OS.window_fullscreen = false
-		update_bus_volume("Master", 0)
+		#update_bus_volume("Master", 0)

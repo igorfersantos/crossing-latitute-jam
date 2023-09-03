@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/GameCamera.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Characters/Player.tscn" type="PackedScene" id=2]
@@ -8,6 +8,9 @@
 
 [sub_resource type="OpenSimplexNoise" id=1]
 seed = 4378
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 243.5, 10 )
 
 [node name="MenuBackground" type="Node2D"]
 
@@ -35,4 +38,10 @@ cell_size = Vector2( 18, 18 )
 format = 1
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 252, 252 )
+position = Vector2( 254, 234 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( 244.5, 261 )
+shape = SubResource( 2 )

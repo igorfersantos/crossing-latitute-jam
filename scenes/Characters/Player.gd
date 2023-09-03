@@ -1,6 +1,7 @@
 extends RigidBody2D
 
 signal died
+signal took_damage
 
 enum State { IDLE, RUN, AIR, KNOCKBACK, INPUT_DISABLED }
 
@@ -23,6 +24,7 @@ var current_iframe_mask = 0
 var last_direction = Vector2.RIGHT
 var jump_pressed
 var knockback_pressed
+
 
 func _ready():
 	$HitboxArea.connect("area_entered", self, "on_hazard_area_entered")
@@ -51,7 +53,6 @@ func _integrate_forces(state):
 			#process_input_disabled(delta, is_on_ground)
 			pass
 
-	print(current_state, " ", $AnimatedSprite.animation, " ", $AnimatedSprite.frame)
 	is_state_new = false
 
 
@@ -167,9 +168,6 @@ func process_knockback(state, is_on_ground):
 		$"/root/Helpers".apply_camera_snake(.75)
 		#$AnimatedSprite.play("knockback")
 		var velocityMod = 1 if $AnimatedSprite.flip_h else -1
-	
-
-
 	if is_on_ground and not move_vec.x:
 		change_state(State.IDLE)
 	
@@ -191,7 +189,6 @@ func get_movement_vector():
 
 
 func jump_knockback():
-	#var angle = 45
 	var direction = Vector2(last_direction.x * -1, -1).normalized()
 	var impulse = Vector2(direction.x * player_stats.horizontal_jump_force, direction.y * player_stats.vertical_jump_force)
 	apply_central_impulse(impulse)
@@ -201,6 +198,19 @@ func jump():
 	var direction = Vector2.UP
 	var impulse = Vector2(direction.x * player_stats.horizontal_jump_force, direction.y * player_stats.vertical_jump_force)
 	apply_central_impulse(impulse)
+
+
+func take_damage(damage):
+	player_stats.lifes -= damage
+	print(player_stats.lifes)
+
+	if player_stats.lifes <= 0:
+		call_deferred("kill")
+		return
+	
+	jump_knockback()
+	print("life: %s" % [player_stats.lifes])
+	emit_signal("took_damage", damage)
 
 
 func kill():
@@ -229,15 +239,14 @@ func disable_player_input():
 
 func on_hazard_area_entered(_area2d):
 	$"/root/Helpers".apply_camera_snake(1)
-	call_deferred("kill")
+	take_damage(1) # the damage amount should come from the area2d/damage
 
 
 func on_animated_sprite_frame_changed():
 	if ($AnimatedSprite.animation == "run" && $AnimatedSprite.frame == 0):
 		spawn_footsteps()
 
+
 func on_animated_sprite_animation_finished(animation):
 	if animation == "knockback":
-		print("mudou pra damage")
 		$AnimatedSprite.play("knockback_damage")
-		print($AnimatedSprite.animation)

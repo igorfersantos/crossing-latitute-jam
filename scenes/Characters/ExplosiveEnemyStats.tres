@@ -21,7 +21,7 @@ export var countdown_time = 2
 
 [resource]
 script = SubResource( 1 )
-start_direction = 0
+start_direction = 1
 minSpeed = 25
 maxSpeed = 100
 speed = 10
@@ -29,5 +29,5 @@ gravity = 500
 bomb_strength = 2
 bomb_radius = 30
 bomb_raycasts = 200
-bomb_mask = 7
+bomb_mask = 6
 countdown_time = 6
