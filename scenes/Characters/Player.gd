@@ -26,6 +26,8 @@ var last_direction = Vector2.RIGHT
 var jump_pressed
 var knockback_pressed
 
+onready var hitbox_collision_shape = $HitboxArea/CollisionShape2D
+
 
 func _ready():
 	$HitboxArea.connect("area_entered", self, "on_hazard_area_entered")
@@ -41,6 +43,8 @@ func _integrate_forces(state):
 	move_vec = get_movement_vector()
 	jump_pressed = Input.is_action_just_pressed("jump")
 	knockback_pressed = Input.is_action_just_pressed("jump_knockback")
+
+	print("current_state: %s" % [current_state])
 
 	match current_state:
 		State.IDLE:
@@ -113,7 +117,7 @@ func process_idle(state, is_on_ground):
 		$AnimatedSprite.play("idle")
 		linear_velocity.x = 0
 	
-	if move_vec.x:
+	if is_on_ground and move_vec.x:
 		change_state(State.RUN)
 	elif is_on_ground and jump_pressed:
 		jump()
@@ -174,7 +178,8 @@ func process_knockback(state, is_on_ground):
 		collision_mask = iframe_mask
 		print("iframe_timer_start")
 		$AnimatedSprite.modulate = Color(1, 1, 1, 0.16)
-	if is_on_ground and not move_vec.x:
+
+	if is_on_ground and just_aired_timer.is_stopped() and not move_vec.x:
 		change_state(State.IDLE)
 	
 	update_animation()
@@ -247,6 +252,8 @@ func disable_player_input():
 func on_hazard_area_entered(_area2d):
 	$"/root/Helpers".apply_camera_snake(1)
 	take_damage(1) # the damage amount should come from the area2d/damage
+	change_state(State.KNOCKBACK)
+	hitbox_collision_shape.call_deferred("disabled", true)
 
 
 func on_animated_sprite_frame_changed():
@@ -256,6 +263,7 @@ func on_animated_sprite_frame_changed():
 func on_iframe_timer_timeout():
 	print("timeout")
 	collision_mask = $HitboxArea.collision_mask
+	hitbox_collision_shape.call_deferred("disabled", false)
 	$AnimatedSprite.modulate = Color(1, 1, 1, 1)
 
 func on_animated_sprite_animation_finished(animation):
