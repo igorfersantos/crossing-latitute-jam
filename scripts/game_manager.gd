@@ -10,4 +10,5 @@ func _ready():
 
 	if OS.has_feature("editor"):
 		OS.window_fullscreen = false
+		OS.window_size = Vector2(1280, 720)
 		#update_bus_volume("Master", 0)

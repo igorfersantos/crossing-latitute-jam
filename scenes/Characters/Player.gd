@@ -9,6 +9,7 @@ export(int, LAYERS_2D_PHYSICS) var iframe_mask
 export var player_stats: Resource
 
 onready var just_aired_timer = $JustAiredTimer
+onready var iframe_timer = $IframeTimer
 
 var player_death_scene = preload("res://scenes/Characters/PlayerDeath.tscn")
 var footstep_particles = preload("res://scenes/FootstepParticles.tscn")
@@ -30,6 +31,7 @@ func _ready():
 	$HitboxArea.connect("area_entered", self, "on_hazard_area_entered")
 	$AnimatedSprite.connect("frame_changed", self, "on_animated_sprite_frame_changed", [],  CONNECT_REFERENCE_COUNTED)
 	$AnimatedSprite.connect("animation_finished", self, "on_animated_sprite_animation_finished", [$AnimatedSprite.animation], CONNECT_REFERENCE_COUNTED)
+	$IframeTimer.connect("timeout", self, "on_iframe_timer_timeout")
 	current_iframe_mask = $HitboxArea.collision_mask
 	
 
@@ -166,8 +168,12 @@ func process_knockback(state, is_on_ground):
 		$DashAudioPlayer.play()
 		$Visuals/DashParticles.emitting = true
 		$"/root/Helpers".apply_camera_snake(.75)
-		#$AnimatedSprite.play("knockback")
 		var velocityMod = 1 if $AnimatedSprite.flip_h else -1
+		
+		iframe_timer.start()
+		collision_mask = iframe_mask
+		print("iframe_timer_start")
+		$AnimatedSprite.modulate = Color(1, 1, 1, 0.16)
 	if is_on_ground and not move_vec.x:
 		change_state(State.IDLE)
 	
@@ -189,9 +195,10 @@ func get_movement_vector():
 
 
 func jump_knockback():
-	var direction = Vector2(last_direction.x * -1, -1).normalized()
-	var impulse = Vector2(direction.x * player_stats.horizontal_jump_force, direction.y * player_stats.vertical_jump_force)
-	apply_central_impulse(impulse)
+	if iframe_timer.is_stopped():
+		var direction = Vector2(last_direction.x * -1, -1).normalized()
+		var impulse = Vector2(direction.x * player_stats.horizontal_jump_force, direction.y * player_stats.vertical_jump_force)
+		apply_central_impulse(impulse)
 
 
 func jump():
@@ -246,6 +253,10 @@ func on_animated_sprite_frame_changed():
 	if ($AnimatedSprite.animation == "run" && $AnimatedSprite.frame == 0):
 		spawn_footsteps()
 
+func on_iframe_timer_timeout():
+	print("timeout")
+	collision_mask = $HitboxArea.collision_mask
+	$AnimatedSprite.modulate = Color(1, 1, 1, 1)
 
 func on_animated_sprite_animation_finished(animation):
 	if animation == "knockback":

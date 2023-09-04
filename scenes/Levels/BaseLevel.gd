@@ -13,6 +13,7 @@ var current_player_node = null
 var total_coins = 0
 var collected_coins = 0
 var enemy_spawnable_area = Vector2()
+var max_life
 
 
 func _ready():
@@ -20,10 +21,11 @@ func _ready():
 	spawnPosition = $PlayerSpawnPoint.global_position
 	var player_instance = register_player(playerScene)
 	spawn_player(player_instance)
+	max_life = player_instance.player_stats.lifes
+	print(max_life)
 	
 	coin_total_changed(get_tree().get_nodes_in_group("coin").size())
-
-	$LevelUI.init(player_instance.player_stats.lifes)
+	$LevelUI.init(max_life)
 
 
 func _unhandled_input(event):

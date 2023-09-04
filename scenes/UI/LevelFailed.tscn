@@ -82,7 +82,6 @@ align = 1
 
 [node name="CoinCounter" parent="MarginContainer/PanelContainer/MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource( 4 )]
 visible = false
-anchor_right = 0.0
 margin_left = 36.0
 margin_top = 19.0
 margin_right = 76.0

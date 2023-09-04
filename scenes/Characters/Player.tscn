@@ -174,12 +174,12 @@ animations = [ {
 "frames": [ ExtResource( 46 ), ExtResource( 44 ), ExtResource( 45 ), ExtResource( 43 ), ExtResource( 47 ) ],
 "loop": false,
 "name": "knockback",
-"speed": 20.0
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 52 ), ExtResource( 48 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 49 ), ExtResource( 51 ) ],
 "loop": false,
 "name": "knockback_damage",
-"speed": 20.0
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 3 ), ExtResource( 42 ), ExtResource( 41 ), ExtResource( 37 ), ExtResource( 39 ), ExtResource( 19 ), ExtResource( 40 ), ExtResource( 38 ), ExtResource( 36 ), ExtResource( 35 ) ],
 "loop": true,
@@ -371,7 +371,7 @@ margin_top = -540.0
 margin_right = 960.0
 margin_bottom = 540.0
 rect_rotation = 360.0
-rect_scale = Vector2( 2.05933, 2.05933 )
+rect_scale = Vector2( 1.5, 1.5 )
 rect_pivot_offset = Vector2( 960, 540 )
 texture = ExtResource( 17 )
 
@@ -381,6 +381,10 @@ current = true
 
 [node name="JustAiredTimer" type="Timer" parent="."]
 wait_time = 0.15
+one_shot = true
+
+[node name="IframeTimer" type="Timer" parent="."]
+wait_time = 2.0
 one_shot = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
@@ -420,6 +424,7 @@ collision_mask = 5242880
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxArea"]
 position = Vector2( 0, -2 )
 shape = SubResource( 4 )
+disabled = true
 
 [node name="DashArea" type="Area2D" parent="."]
 visible = false
